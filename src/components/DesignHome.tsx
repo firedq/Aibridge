@@ -1,4 +1,4 @@
-import { Plus, FileText, Calendar, ExternalLink, MoreVertical, Edit, Copy, Trash2 } from 'lucide-react';
+import { Plus, FileText, Calendar, ExternalLink, MoreVertical, Edit, Copy, Trash2, Link2 } from 'lucide-react';
 
 interface FormItem {
   id: string;
@@ -27,6 +27,50 @@ export function DesignHome({
   onDuplicate: (formId: string) => void;
   onDelete: (formId: string) => void;
 }) {
+  // 生成表单填写链接
+  const generateFormLink = (formId: string) => {
+    return `https://admin.aihub.com/form/${formId}/fill`;
+  };
+
+  // 生成我的表单链接
+  const generateMyFormLink = (formId: string) => {
+    return `https://admin.aihub.com/form/${formId}/my`;
+  };
+
+  // 复制表单填写链接
+  const handleCopyFormLink = async (formId: string, formName: string) => {
+    const link = generateFormLink(formId);
+    try {
+      await navigator.clipboard.writeText(link);
+      alert(`表单填写链接已复制！\n\n${formName}\n${link}`);
+    } catch (err) {
+      const textArea = document.createElement('textarea');
+      textArea.value = link;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert(`表单填写链接已复制！\n\n${formName}\n${link}`);
+    }
+  };
+
+  // 复制我的表单链接
+  const handleCopyMyFormLink = async (formId: string, formName: string) => {
+    const link = generateMyFormLink(formId);
+    try {
+      await navigator.clipboard.writeText(link);
+      alert(`我的表单链接已复制！\n\n${formName}\n${link}`);
+    } catch (err) {
+      const textArea = document.createElement('textarea');
+      textArea.value = link;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert(`我的表单链接已复制！\n\n${formName}\n${link}`);
+    }
+  };
+
   return (
     <div>
       {/* Header */}
@@ -68,13 +112,33 @@ export function DesignHome({
                     <MoreVertical className="w-4 h-4 text-slate-500" />
                   </button>
                   {/* Dropdown Menu */}
-                  <div className="absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-lg border border-slate-200 py-1 opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all z-10">
+                  <div className="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-1 opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all z-10">
                     <button
                       onClick={() => onEdit(form.id)}
                       className="w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
                     >
                       <Edit className="w-3 h-3" />
                       编辑
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCopyFormLink(form.id, form.name);
+                      }}
+                      className="w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                    >
+                      <Link2 className="w-3 h-3" />
+                      复制表单填写链接
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCopyMyFormLink(form.id, form.name);
+                      }}
+                      className="w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                    >
+                      <Link2 className="w-3 h-3" />
+                      复制我的表单链接
                     </button>
                     <button
                       onClick={() => onDuplicate(form.id)}
