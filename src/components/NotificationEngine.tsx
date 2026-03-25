@@ -109,7 +109,7 @@ export function NotificationEngine() {
   // 服务配置状态（模拟，实际应从系统配置中读取）
   const [serviceConfig] = useState({
     smsConfigured: true,
-    emailConfigured: false,
+    emailConfigured: true,
   });
 
   const handleToggleRule = (ruleId: string) => {
@@ -441,6 +441,10 @@ function NotificationRuleModal({
     }
     if (formData.channels.email && !formData.messageTemplates.email) {
       alert('请填写邮件消息模板');
+      return;
+    }
+    if (formData.channels.email && !formData.messageTemplates.emailSubject) {
+      alert('请填写邮件主题');
       return;
     }
     

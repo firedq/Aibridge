@@ -134,13 +134,6 @@ export function SystemConfig() {
     },
   ];
 
-  const [shadowDbConfig, setShadowDbConfig] = useState({
-    enabled: true,
-    storage: 'postgresql',
-    retention: '90',
-    piiMasking: true,
-  });
-
   // 短信配置 (Story 3.4)
   const [smsConfig, setSmsConfig] = useState({
     provider: 'aliyun',
@@ -548,95 +541,6 @@ export function SystemConfig() {
                   </div>
                 </div>
               )}
-
-              {/* Shadow Database Config */}
-              <div className="bg-white rounded-xl border border-slate-200">
-                <div className="px-6 py-4 border-b border-slate-200">
-                  <h2 className="font-semibold text-slate-900 flex items-center gap-2">
-                    <Shield className="w-5 h-5 text-purple-600" />
-                    影子数据库配置
-                  </h2>
-                  <p className="text-sm text-slate-600 mt-1">
-                    配置AI分析用数据副本存储策略
-                  </p>
-                </div>
-
-                <div className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="flex items-center gap-2 mb-3">
-                        <input
-                          type="checkbox"
-                          checked={shadowDbConfig.enabled}
-                          onChange={(e) => setShadowDbConfig({ ...shadowDbConfig, enabled: e.target.checked })}
-                          className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
-                        />
-                        <span className="text-sm font-medium text-slate-700">启用影子数据库</span>
-                      </label>
-
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-1">
-                            存储方式
-                          </label>
-                          <select
-                            value={shadowDbConfig.storage}
-                            onChange={(e) => setShadowDbConfig({ ...shadowDbConfig, storage: e.target.value })}
-                            disabled={!shadowDbConfig.enabled}
-                            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            <option value="postgresql">PostgreSQL</option>
-                            <option value="mysql">MySQL</option>
-                            <option value="mongodb">MongoDB</option>
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-1">
-                            数据保留期限（天）
-                          </label>
-                          <input
-                            type="number"
-                            value={shadowDbConfig.retention}
-                            onChange={(e) => setShadowDbConfig({ ...shadowDbConfig, retention: e.target.value })}
-                            disabled={!shadowDbConfig.enabled}
-                            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="flex items-center gap-2 mb-3">
-                        <input
-                          type="checkbox"
-                          checked={shadowDbConfig.piiMasking}
-                          onChange={(e) => setShadowDbConfig({ ...shadowDbConfig, piiMasking: e.target.checked })}
-                          disabled={!shadowDbConfig.enabled}
-                          className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                        />
-                        <span className="text-sm font-medium text-slate-700">PII自动脱敏</span>
-                      </label>
-
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <h4 className="text-sm font-medium text-blue-900 mb-2">脱敏规则</h4>
-                        <ul className="text-xs text-blue-800 space-y-1">
-                          <li>• 手机号：保留前3后4位</li>
-                          <li>• 身份证：保留前6后4位</li>
-                          <li>• 银行卡：保留后4位</li>
-                          <li>• 姓名：保留姓氏</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-end mt-6 pt-6 border-t border-slate-200">
-                    <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
-                      保存配置
-                    </button>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         )}
@@ -1072,29 +976,34 @@ export function SystemConfig() {
                     选择方式 <span className="text-red-500">*</span>
                   </label>
                   <div className="flex items-center gap-6">
-                    <label className="flex items-center gap-2">
+                    <label className="flex items-center gap-2 opacity-60 cursor-not-allowed">
                       <input
                         type="radio"
                         name="direction"
                         value="in"
                         checked={newTableMapping.direction === 'in'}
                         onChange={(e) => setNewTableMapping({ ...newTableMapping, direction: 'in' })}
+                        disabled
                         className="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500"
                       />
                       <span className="text-sm text-slate-700">数据传入（从OA到AI-Hub）</span>
                     </label>
-                    <label className="flex items-center gap-2">
+                    <label className="flex items-center gap-2 opacity-60 cursor-not-allowed">
                       <input
                         type="radio"
                         name="direction"
                         value="out"
                         checked={newTableMapping.direction === 'out'}
                         onChange={(e) => setNewTableMapping({ ...newTableMapping, direction: 'out' })}
+                        disabled
                         className="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500"
                       />
                       <span className="text-sm text-slate-700">数据传出（从AI-Hub到OA）</span>
                     </label>
                   </div>
+                  <p className="text-xs text-slate-500 mt-2">
+                    💡 当前版本仅支持数据传入模式，数据传出功能将在后续版本中开放
+                  </p>
                 </div>
               </div>
 

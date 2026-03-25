@@ -6,7 +6,7 @@ import { NotificationEngine } from './components/NotificationEngine';
 import { AppCenter } from './components/AppCenter';
 import { AppCreateModal } from './components/AppCreateModal';
 import { SubmissionDataPage } from './components/SubmissionDataPage';
-import { Zap, BarChart3, Settings, ArrowLeft, Bell } from 'lucide-react';
+import { Zap, BarChart3, Settings, ArrowLeft, Bell, Building2, ChevronDown } from 'lucide-react';
 
 type TabType = 'design' | 'notification' | 'config' | 'analytics';
 
@@ -29,6 +29,15 @@ export default function App() {
   const [selectedApp, setSelectedApp] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showDataPage, setShowDataPage] = useState(false);
+  const [currentTenant, setCurrentTenant] = useState('华强集团');
+  
+  // 租户列表
+  const tenants = [
+    { id: 'tenant-1', name: '华强集团', status: 'active' },
+    { id: 'tenant-2', name: '鑫源机械', status: 'active' },
+    { id: 'tenant-3', name: '宏达化工', status: 'active' },
+    { id: 'tenant-4', name: '优质包装', status: 'inactive' },
+  ];
   
   const [applications, setApplications] = useState<Application[]>([
     {
@@ -163,6 +172,48 @@ export default function App() {
                     : '企业内外协同连接平台'
                   }
                 </p>
+              </div>
+              
+              {/* Tenant Switcher */}
+              <div className="relative group/tenant ml-2">
+                <button className="flex items-center gap-2 px-3 py-2 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition-all">
+                  <Building2 className="w-4 h-4 text-slate-600" />
+                  <span className="text-sm font-medium text-slate-900">{currentTenant}</span>
+                  <ChevronDown className="w-4 h-4 text-slate-500" />
+                </button>
+                
+                {/* Dropdown Menu */}
+                <div className="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-slate-200 py-2 opacity-0 invisible group-hover/tenant:opacity-100 group-hover/tenant:visible transition-all z-20">
+                  <div className="px-3 py-2 border-b border-slate-100">
+                    <p className="text-xs text-slate-500 font-medium">切换租户</p>
+                  </div>
+                  {tenants.map((tenant) => (
+                    <button
+                      key={tenant.id}
+                      onClick={() => setCurrentTenant(tenant.name)}
+                      className={`w-full px-3 py-2 text-left text-sm hover:bg-slate-50 flex items-center justify-between ${
+                        currentTenant === tenant.name ? 'bg-blue-50' : ''
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Building2 className={`w-4 h-4 ${currentTenant === tenant.name ? 'text-blue-600' : 'text-slate-400'}`} />
+                        <span className={currentTenant === tenant.name ? 'text-blue-700 font-medium' : 'text-slate-700'}>
+                          {tenant.name}
+                        </span>
+                      </div>
+                      {tenant.status === 'active' ? (
+                        <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                      ) : (
+                        <span className="w-2 h-2 bg-slate-300 rounded-full"></span>
+                      )}
+                    </button>
+                  ))}
+                  <div className="px-3 py-2 border-t border-slate-100 mt-1">
+                    <button className="w-full text-xs text-blue-600 hover:text-blue-700 text-left font-medium">
+                      + 添加新租户
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-3">
